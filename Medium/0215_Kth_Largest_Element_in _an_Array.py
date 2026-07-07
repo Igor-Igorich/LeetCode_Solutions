@@ -49,4 +49,38 @@ def find_kth_largest_01(nums: List[int], k: int) -> int:
 def primitive_find_kth_largest(nums: List[int], k: int) -> int:
     return sorted(nums, reverse=True)[k-1]
 
-print(pipeline_check(primitive_find_kth_largest))
+
+class SpecialList:
+    def __init__(self):
+        self.data = []
+
+    def insert_sorted(self, x):
+        lo, hi = 0, len(self.data)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if self.data[mid] < x:
+                lo = mid + 1
+            else:
+                hi = mid
+        self.data.insert(lo, x)
+
+    def pop_first(self):
+        if not self.data:
+            raise IndexError("pop from empty list")
+        return self.data.pop(0)
+
+    def __len__(self):
+        return len(self.data)
+
+    def first(self):
+        return self.data[0] if self.data else None
+
+def findKthLargest_with_special(nums, k):
+    sl = SpecialList()
+    for x in nums:
+        sl.insert_sorted(x)
+        if len(sl) > k:
+            sl.pop_first()
+    return sl.first()
+
+print(pipeline_check(findKthLargest_with_special))
