@@ -1,24 +1,33 @@
+from typing import List
 
-class Solution:
-    def trap(self, height):
+def trap(height: List[int]) -> int:
+	cur_max = 0
+	left = 0
+	right = len(height) - 1
+	res = 0
+	while left < right:
+		cur_l = height[left]
+		cur_r = height[right]
+		
+		if cur_l == cur_r:
+			cur_max = cur_l
+			left += 1
+		elif cur_l < cur_r:
+			cur_max = max(cur_max, cur_l)
+			res += cur_max - cur_l
+			left += 1
+		else:
+			cur_max = max(cur_max, cur_r)
+			res += cur_max - cur_r
+			right -= 1
+			
+	return res
+			
+			
 
-        start = 0
-        end = len(height) - 1
+def pipeline_check(func) -> str:
+	h_1 = [0,1,0,2,1,0,1,3,2,1,2,1]
+	h_2 = [4,2,0,3,2,5]
+	return f'1) {func(h_1)}\n2) {func(h_2)}'
 
-        leftMax = 0
-        rightMax = 0
-        totalWater = 0
-
-        while start < end:
-
-            leftMax = max(leftMax, height[start])
-            rightMax = max(rightMax, height[end])
-
-            if leftMax < rightMax:
-                totalWater += leftMax - height[start]
-                start += 1
-            else:
-                totalWater += rightMax - height[end]
-                end -= 1
-
-        return totalWater
+print(pipeline_check(trap))
