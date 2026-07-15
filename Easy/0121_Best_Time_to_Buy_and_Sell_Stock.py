@@ -29,5 +29,28 @@ def mmax_profit(prices: List[int]) -> int:
 
 prices = [7,6,4,3,1]
 print(my_max_profit(prices))
+
+def max_profit_sliding_window(prices: List[int]) -> int:
+	left = 0
+	right = 1
+	cur_l = prices[left]
+	res = 0
+	len_prices = len(prices)
+	while right < len_prices:
+		cur_r = prices[right]
+		if cur_r > cur_l:
+			res = max(res, cur_r - cur_l)
+		elif cur_r < cur_l:
+			left = right
+			cur_l = prices[left]
+		right += 1
+	return res
+
+def pipeline_check(func) -> str:
+	p_1 = [7, 1, 5, 3, 6, 4]
+	p_2 = [7,6, 4, 3, 1]
+	return f'1) {func(p_1)}\n2) {func(p_2)}'
+
+print(pipeline_check(max_profit))
             
             
