@@ -1,14 +1,14 @@
 
 def len_of_longest_substr_01(s: str) -> int:
-	
-	if not s:
+
+    if not s:
         return 0
-    
+
     left = 0
     right = 1
     cur_len = 1
     cur_max = 1
-    
+
     while right < len(s):
         
         while right < len(s) and s[right] not in s[left:right]:
@@ -25,7 +25,7 @@ def len_of_longest_substr_01(s: str) -> int:
         while left < right and s[right] in s[left:right]:
             left += 1
             cur_len -= 1
-    
+
     return cur_max
 
 def len_of_longest_substr_02(s: str) -> int:
@@ -51,4 +51,4 @@ def pipeline_check(func) -> str:
 	
 	return f'1) {func(s_1)}\n2) {func(s_2)}\n3) {func(s_3)}'
 
-print(pipeline_check(len_of_longest_substr))
+print(pipeline_check(len_of_longest_substr_01))
