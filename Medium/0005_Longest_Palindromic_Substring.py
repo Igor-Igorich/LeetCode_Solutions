@@ -1,4 +1,4 @@
-def longest_palindrome_01(s: str) -> str:
+def bad_longest_palindrome(s: str) -> str:
 
     if len(s) == 0:
         return ""
@@ -6,38 +6,64 @@ def longest_palindrome_01(s: str) -> str:
         return s
 
     last_pal = s[0]
-    left = right = 0
 
-    while right < (len(s) - 1):
+    for center in range(len(s)):
 
-        right += 1
-        if s[left] != s[right]:
-            if right < (len(s) - 1):
-                right += 1
-                if s[left] != s[right]:
-                    left += 1
-                    if s[left] != s[right]:
-                        right = left
-                        continue
-            else:
-                continue
+        left = right = center
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            if (right - left + 1) > len(last_pal):
+                last_pal = s[left : right + 1]
+            left -= 1
+            right += 1
 
-        i = 0
-        while (
-            ((left - i) > 0)
-            and ((right + i) < (len(s) - 1))
-            and (s[left - i - 1] == s[right + i + 1])
-        ):
-
-            i += 1
-
-        if (right - left + 1) > len(last_pal):
-            last_pal = s[left - i : right + i + 1]
-
-        left += 1
-        right = left
+        left = center
+        right = center + 1
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            if (right - left + 1) > len(last_pal):
+                last_pal = s[left : right + 1]
+            left -= 1
+            right += 1
 
     return last_pal
+
+
+def good_longest_palindrome(s: str) -> str:
+
+    n = len(s)
+    # 1. Мгновенная проверка на C-уровне Python
+    if n <= 1 or s == s[::-1]:
+        return s
+
+    start, max_len = 0, 1
+    i = 0
+
+    while i < n:
+        # 2. Ранняя остановка (Early Exit)
+        # Если оставшийся хвост строки физически не может дать палиндром длиннее max_len
+        if (n - i) <= max_len // 2:
+            break
+
+        l = r = i
+
+        # 3. Схлопывание дубликатов (серии одинаковых букв "aaaaa")
+        while r < n - 1 and s[r] == s[r + 1]:
+            r += 1
+
+        # Следующую проверку начинаем СРАЗУ после серии одинаковых букв
+        i = r + 1
+
+        # 4. Расширение от единого схлопнутого центра
+        while r < n - 1 and l > 0 and s[r + 1] == s[l - 1]:
+            r += 1
+            l -= 1
+
+        # Запоминаем максимум
+        length = r - l + 1
+        if length > max_len:
+            start = l
+            max_len = length
+
+    return s[start : start + max_len]
 
 
 def check(func):
@@ -53,4 +79,4 @@ def check(func):
     print(f"{s_5}: {func(s_5)}")
 
 
-check(longest_palindrome_01)
+check(good_longest_palindrome)
